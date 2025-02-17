@@ -3,15 +3,15 @@ package main
 import (
 	"context"
 	"errors"
+	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
+	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/felipeg48/todo-app/graph"
+	"github.com/rs/cors"
 	"log"
 	"net/http"
 	"os"
 	"runtime/debug"
-
-	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/felipeg48/todo-app/graph"
 )
 
 const defaultPort = "8080"
@@ -32,8 +32,14 @@ func main() {
 		return errors.New("user message on panic")
 	})
 
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:8081"},
+		AllowCredentials: true, // If you need to send cookies
+	})
+	handlerWithCORS := c.Handler(srv)
+
 	http.Handle("/", playground.Handler("GraphQL Playground", "/query"))
-	http.Handle("/query", srv)
+	http.Handle("/query", handlerWithCORS)
 
 	log.Printf("connect to http://localhost:%s/ for GraphQL Playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))

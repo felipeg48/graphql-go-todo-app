@@ -21,3 +21,13 @@ query {
   }
 }
 ----
+
+
+== Client
+
+The client is simple for VueJS using CDN
+
+[source,shell]
+----
+python3 -m http.server 8585
+----
