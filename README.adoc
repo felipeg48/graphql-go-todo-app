@@ -1,0 +1,23 @@
+= Go - GraphQL
+
+[source,graphql]
+----
+mutation {
+  createTodo(text: "Got milk?") {
+  	id
+  	text
+  	completed
+  }
+}
+----
+
+[source,graphql]
+----
+query {
+  todos {
+  	id
+  	text
+  	completed
+  }
+}
+----
